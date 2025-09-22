@@ -1,11 +1,10 @@
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+FROM python:3.10-slim
+
 WORKDIR /app
 
-COPY . ./
-RUN dotnet restore
-RUN dotnet publish -c Release -o out
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
-FROM mcr.microsoft.com/dotnet/aspnet:8.0
-WORKDIR /app
-COPY --from=build /app/out .
-ENTRYPOINT ["dotnet", "discord-music-bot.dll"]
+COPY . .
+
+CMD ["python", "main.py"]
